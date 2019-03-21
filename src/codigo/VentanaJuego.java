@@ -71,7 +71,7 @@ public class VentanaJuego extends javax.swing.JFrame {
                 listaMarcianos[i][j].y = i * (10 + listaMarcianos[i][j].imagen1.getHeight(null));
             }
         }
-        
+
     }
 
     private void bucleDelJuego() {
@@ -84,7 +84,6 @@ public class VentanaJuego extends javax.swing.JFrame {
 
         //////////////////////////////////////////////////////////////////////
         //Redibujaremos aquí cada elemento
-        
         //g2.drawImage(miMarciano.imagen1, miMarciano.x, miMarciano.y, null);
         g2.drawImage(miDisparo.imagen, miDisparo.x, miDisparo.y, null);
         g2.drawImage(miNave.imagen, miNave.x, miNave.y, null);
@@ -92,7 +91,6 @@ public class VentanaJuego extends javax.swing.JFrame {
         chequeaColision();
         miNave.mueve();
         miDisparo.mueve();
-        
 
         ////////////////////////////////////////////////////////////////////
         //****************** fase final, se dibuja ***********************//
@@ -109,20 +107,22 @@ public class VentanaJuego extends javax.swing.JFrame {
                 miDisparo.y,
                 miDisparo.imagen.getWidth(null),
                 miDisparo.imagen.getHeight(null));
-        
+
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
-                rectanguloMarciano.setFrame(listaMarcianos[i][j].x,
-                                            listaMarcianos[i][j].y,
-                                            listaMarcianos[i][j].imagen1.getWidth(null),
-                                            listaMarcianos[i][j].imagen1.getHeight(null)
-                );
-                if (rectanguloDisparo.intersects(rectanguloMarciano)){
-                    listaMarcianos[i][j].y = 2000;
-                    listaMarcianos[i][j].x = ANCHOPANTALLA /2 - listaMarcianos[i][j].imagen1.getWidth(null)/2;
-                    miDisparo.posicionaDisparo(miNave);
-                    miDisparo.y = 1000;
-                    miDisparo.disparado = false;
+                if (listaMarcianos[i][j].vivo) {
+                    rectanguloMarciano.setFrame(listaMarcianos[i][j].x,
+                            listaMarcianos[i][j].y,
+                            listaMarcianos[i][j].imagen1.getWidth(null),
+                            listaMarcianos[i][j].imagen1.getHeight(null)
+                    );
+                    if (rectanguloDisparo.intersects(rectanguloMarciano)) {
+                        listaMarcianos[i][j].vivo = false;
+                        listaMarcianos[i][j].x = ANCHOPANTALLA / 2 - listaMarcianos[i][j].imagen1.getWidth(null) / 2;
+                        miDisparo.posicionaDisparo(miNave);
+                        miDisparo.y = 1000;
+                        miDisparo.disparado = false;
+                    }
                 }
             }
         }
@@ -133,10 +133,10 @@ public class VentanaJuego extends javax.swing.JFrame {
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
                 listaMarcianos[i][j].setvX(listaMarcianos[i][j].getvX() * -1);
-                
+
             }
         }
-        
+
     }
 
     private void pintaMarcianos(Graphics2D _g2) {
@@ -144,32 +144,35 @@ public class VentanaJuego extends javax.swing.JFrame {
         int anchoMarciano = listaMarcianos[0][0].imagen1.getWidth(null);
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
-                listaMarcianos[i][j].mueve();
-                //Chequeo si el marciano ha chocado contra la pared para cambiar la direccion
-                //de todos los marcianos
-                if (listaMarcianos[i][j].x + anchoMarciano == ANCHOPANTALLA || listaMarcianos[i][j].x == 0) {
-                    //direccionMarcianos = !direccionMarcianos;
-                    direccionMarcianos = true;
-                }
+                if (listaMarcianos[i][j].vivo) {
+                    listaMarcianos[i][j].mueve();
 
-                if (contador < 50) {
-                    _g2.drawImage(listaMarcianos[i][j].imagen1,
-                            listaMarcianos[i][j].x,
-                            listaMarcianos[i][j].y,
-                            null);
-                } else if (contador < 100) {
-                    _g2.drawImage(listaMarcianos[i][j].imagen2,
-                            listaMarcianos[i][j].x,
-                            listaMarcianos[i][j].y,
-                            null);
-                } else {
-                    contador = 0;
+                    //Chequeo si el marciano ha chocado contra la pared para cambiar la direccion
+                    //de todos los marcianos
+                    if (listaMarcianos[i][j].x + anchoMarciano == ANCHOPANTALLA || listaMarcianos[i][j].x == 0) {
+
+                        direccionMarcianos = true;
+                    }
+
+                    if (contador < 50) {
+                        _g2.drawImage(listaMarcianos[i][j].imagen1,
+                                listaMarcianos[i][j].x,
+                                listaMarcianos[i][j].y,
+                                null);
+                    } else if (contador < 100) {
+                        _g2.drawImage(listaMarcianos[i][j].imagen2,
+                                listaMarcianos[i][j].x,
+                                listaMarcianos[i][j].y,
+                                null);
+                    } else {
+                        contador = 0;
+                    }
                 }
             }
 
         }
-        
-        if(direccionMarcianos){
+
+        if (direccionMarcianos) {
             cambiaDireccionMarcianos();
             direccionMarcianos = false;
         }

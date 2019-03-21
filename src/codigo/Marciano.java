@@ -1,4 +1,3 @@
-
 package codigo;
 
 import java.awt.Image;
@@ -15,30 +14,22 @@ public class Marciano {
     public int x = 0;
     public int y = 0;
     private int vX = 1;
-    
-    
-    public Marciano(){
+    public boolean vivo = true;
+
+    public Marciano() {
         try {
             imagen1 = ImageIO.read(getClass().getResource("/imagenes/marcianito1.png"));
             //imagen1 = ImageIO.read(getClass().getResource("/imagenes/karel.png"));
             imagen2 = ImageIO.read(getClass().getResource("/imagenes/marcianito2.png"));
         } catch (IOException ex) {
-            
+
         }
     }
-    
-    public void mueve(){
-       
-       
-            
-                x += vX;
-            
-        
-       
-            
-               
-               
-        
+
+    public void mueve() {
+
+        x += vX;
+
     }
 
     public void setvX(int vX) {
