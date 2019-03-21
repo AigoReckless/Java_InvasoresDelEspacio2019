@@ -28,8 +28,17 @@ public class Marciano {
     }
     
     public void mueve(){
+       
+       
+            
+                x += vX;
+            
         
-        x += vX; 
+       
+            
+               
+               
+        
     }
 
     public void setvX(int vX) {
