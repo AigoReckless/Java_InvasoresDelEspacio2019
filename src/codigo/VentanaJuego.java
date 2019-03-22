@@ -85,9 +85,10 @@ public class VentanaJuego extends javax.swing.JFrame {
         temporizador.start();
 
         //Inicializo la posición inicial de la nave
+        miNave.imagen = imagenes [21];
         miNave.x = ANCHOPANTALLA / 2 - miNave.imagen.getWidth(this) / 2;
         miNave.y = ALTOPANTALLA - miNave.imagen.getHeight(this) - 40;
-        miNave.imagen = imagenes [21];
+        
         //Inicializo el array de marcianos
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
