@@ -17,13 +17,7 @@ public class Marciano {
     public boolean vivo = true;
 
     public Marciano() {
-        try {
-            imagen1 = ImageIO.read(getClass().getResource("/imagenes/marcianito1.png"));
-            //imagen1 = ImageIO.read(getClass().getResource("/imagenes/karel.png"));
-            imagen2 = ImageIO.read(getClass().getResource("/imagenes/marcianito2.png"));
-        } catch (IOException ex) {
-
-        }
+        
     }
 
     public void mueve() {
