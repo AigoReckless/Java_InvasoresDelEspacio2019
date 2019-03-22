@@ -74,6 +74,10 @@ public class VentanaJuego extends javax.swing.JFrame {
                 imagenes[i*4 + j] = imagenes[i*4 +j].getScaledInstance(32, 32, Image.SCALE_SMOOTH);
             }
         }
+        for(int j=0; j<4; j++){
+            //La ultima fila del spritesheet solo mide 32 de alto asi que hay que hacerla aparte
+            imagenes[20+j] = plantilla.getSubimage(j*64, 5*64, 64, 32);
+        }
         setSize(ANCHOPANTALLA, ALTOPANTALLA);
         buffer = (BufferedImage) jPanel1.createImage(ANCHOPANTALLA, ALTOPANTALLA);
         buffer.createGraphics();
@@ -83,13 +87,13 @@ public class VentanaJuego extends javax.swing.JFrame {
         //Inicializo la posición inicial de la nave
         miNave.x = ANCHOPANTALLA / 2 - miNave.imagen.getWidth(this) / 2;
         miNave.y = ALTOPANTALLA - miNave.imagen.getHeight(this) - 40;
-
+        miNave.imagen = imagenes [21];
         //Inicializo el array de marcianos
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
                 listaMarcianos[i][j] = new Marciano();
-                listaMarcianos[i][j].imagen1 = imagenes[i];
-                listaMarcianos[i][j].imagen2 = imagenes[j +2];
+                listaMarcianos[i][j].imagen1 = imagenes[2*i];
+                listaMarcianos[i][j].imagen2 = imagenes[2*i+1];
                 listaMarcianos[i][j].x = j * (15 + listaMarcianos[i][j].imagen1.getWidth(null));
                 listaMarcianos[i][j].y = i * (10 + listaMarcianos[i][j].imagen1.getHeight(null));
             }
