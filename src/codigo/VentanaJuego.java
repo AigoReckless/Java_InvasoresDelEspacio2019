@@ -45,7 +45,7 @@ public class VentanaJuego extends javax.swing.JFrame {
     //Imagen para cargar el spritesheet con todos los sprites del juego
     BufferedImage plantilla = null;
     Image [] imagenes = new Image[30];
-    
+    int puntuacion = 0;
     Timer temporizador = new Timer(10, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -78,6 +78,13 @@ public class VentanaJuego extends javax.swing.JFrame {
             //La ultima fila del spritesheet solo mide 32 de alto asi que hay que hacerla aparte
             imagenes[20+j] = plantilla.getSubimage(j*64, 5*64, 64, 32);
         }
+        for(int i=0; i<5; i++){
+            //La ultima columna del spritesheet solo mide 32 de largo asi que hay que hacerla aparte
+            imagenes[24+i] = plantilla.getSubimage(4*64, i*64, 32, 64);
+        }
+        imagenes[24] = plantilla.getSubimage(4*64, 2*64, 32, 64);
+        imagenes[24] = imagenes[24].getScaledInstance(16, 32, Image.SCALE_SMOOTH);
+        miDisparo.imagen = imagenes [24];
         setSize(ANCHOPANTALLA, ALTOPANTALLA);
         buffer = (BufferedImage) jPanel1.createImage(ANCHOPANTALLA, ALTOPANTALLA);
         buffer.createGraphics();
@@ -146,6 +153,7 @@ public class VentanaJuego extends javax.swing.JFrame {
                     );
                     if (rectanguloDisparo.intersects(rectanguloMarciano)) {
                         listaMarcianos[i][j].vivo = false;
+                        puntuacion +=100;
                         listaMarcianos[i][j].x = ANCHOPANTALLA / 2 - listaMarcianos[i][j].imagen1.getWidth(null) / 2;
                         miDisparo.posicionaDisparo(miNave);
                         miDisparo.y = 1000;
@@ -178,10 +186,15 @@ public class VentanaJuego extends javax.swing.JFrame {
                     //Chequeo si el marciano ha chocado contra la pared para cambiar la direccion
                     //de todos los marcianos
                     if (listaMarcianos[i][j].x + anchoMarciano == ANCHOPANTALLA || listaMarcianos[i][j].x == 0) {
-
                         direccionMarcianos = true;
+                        //El siguiente bucle for controla la bajada de los marcianos
+                        for (int k = 0; k < filas; k++) {
+                            for (int m = 0; m < columnas; m++) {
+                                listaMarcianos[k][m].y += listaMarcianos[k][m].imagen1.getHeight(null)/10; //El numero entre el que divido va a controlar lo que tardan en llegar abajo los marcianos
+                            }
+                        }    
                     }
-
+                    
                     if (contador < 50) {
                         _g2.drawImage(listaMarcianos[i][j].imagen1,
                                 listaMarcianos[i][j].x,
@@ -202,6 +215,7 @@ public class VentanaJuego extends javax.swing.JFrame {
 
         if (direccionMarcianos) {
             cambiaDireccionMarcianos();
+            
             direccionMarcianos = false;
         }
     }
@@ -268,6 +282,7 @@ public class VentanaJuego extends javax.swing.JFrame {
                 miNave.setPulsadoDerecha(true);
                 break;
             case KeyEvent.VK_SPACE:
+                
                 miDisparo.posicionaDisparo(miNave);
                 miDisparo.disparado = true;
                 break;

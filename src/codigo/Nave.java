@@ -21,11 +21,11 @@ public class Nave {
     private boolean pulsadoDerecha = false;
     
     public Nave(){
-        try {
-            imagen = ImageIO.read(getClass().getResource("/imagenes/nave.png"));
-        } catch (IOException ex) {
-            
-        }
+//        try {
+//            imagen = ImageIO.read(getClass().getResource("/imagenes/nave.png"));
+//        } catch (IOException ex) {
+//            
+//        }
     }
     
     public void mueve(){
