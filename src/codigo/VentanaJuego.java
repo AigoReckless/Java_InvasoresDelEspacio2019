@@ -44,7 +44,7 @@ public class VentanaJuego extends javax.swing.JFrame {
     int contador = 0;
     //Imagen para cargar el spritesheet con todos los sprites del juego
     BufferedImage plantilla = null;
-    Image [] imagenes = new Image[30];
+    Image [][] imagenes;
     int puntuacion = 0;
     Timer temporizador = new Timer(10, new ActionListener() {
         @Override
@@ -59,32 +59,16 @@ public class VentanaJuego extends javax.swing.JFrame {
      */
     public VentanaJuego() {
         initComponents();
-        try {
-            plantilla = ImageIO.read(getClass().getResource("/imagenes/invaders2.png"));
-        } catch (IOException ex) {
+        //Para cargar el archivo de imagenes:
+        //1º, el nombre del archivo
+        //2º, filas que tiene el spritesheet
+        //3º columnas que tiene el spritesheet
+        //4º lo que mide de ancho el sprite en el spritesheet
+        //5º lo que mide de alto el sprite en el spritesheet
+        //6º para cambiar el tamaño de los sprites
+        imagenes = cargaImagenes("/imagenes/invaders2.png", 5, 4, 64, 64, 2);
         
-        }
-        //Cargo las imagenes de forma individual en cada imagen del array de imagenes
-        for(int i=0; i<5; i++){
-            for(int j=0; j<4; j++){
-                imagenes[i*4 + j] = plantilla.getSubimage(j*64, 
-                                                            i*64,
-                                                            64,
-                                                            64);
-                imagenes[i*4 + j] = imagenes[i*4 +j].getScaledInstance(32, 32, Image.SCALE_SMOOTH);
-            }
-        }
-        for(int j=0; j<4; j++){
-            //La ultima fila del spritesheet solo mide 32 de alto asi que hay que hacerla aparte
-            imagenes[20+j] = plantilla.getSubimage(j*64, 5*64, 64, 32);
-        }
-        for(int i=0; i<5; i++){
-            //La ultima columna del spritesheet solo mide 32 de largo asi que hay que hacerla aparte
-            imagenes[24+i] = plantilla.getSubimage(4*64, i*64, 32, 64);
-        }
-        imagenes[24] = plantilla.getSubimage(4*64, 2*64, 32, 64);
-        imagenes[24] = imagenes[24].getScaledInstance(16, 32, Image.SCALE_SMOOTH);
-        miDisparo.imagen = imagenes [24];
+        miDisparo.imagen = imagenes [3][2];
         setSize(ANCHOPANTALLA, ALTOPANTALLA);
         buffer = (BufferedImage) jPanel1.createImage(ANCHOPANTALLA, ALTOPANTALLA);
         buffer.createGraphics();
@@ -92,7 +76,7 @@ public class VentanaJuego extends javax.swing.JFrame {
         temporizador.start();
 
         //Inicializo la posición inicial de la nave
-        miNave.imagen = imagenes [21];
+        miNave.imagen = imagenes [4][2];
         miNave.x = ANCHOPANTALLA / 2 - miNave.imagen.getWidth(this) / 2;
         miNave.y = ALTOPANTALLA - miNave.imagen.getHeight(this) - 40;
         
@@ -100,15 +84,51 @@ public class VentanaJuego extends javax.swing.JFrame {
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
                 listaMarcianos[i][j] = new Marciano();
-                listaMarcianos[i][j].imagen1 = imagenes[2*i];
-                listaMarcianos[i][j].imagen2 = imagenes[2*i+1];
+                listaMarcianos[i][j].imagen1 = imagenes[0][0];
+                listaMarcianos[i][j].imagen2 = imagenes[0][1];
                 listaMarcianos[i][j].x = j * (15 + listaMarcianos[i][j].imagen1.getWidth(null));
                 listaMarcianos[i][j].y = i * (10 + listaMarcianos[i][j].imagen1.getHeight(null));
             }
         }
 
     }
-
+    /*
+    Este método va a servir para crear el array de imagenes con todas las imagenes
+    del spritesheet. Devolverá un array de dos dimensiones con las imagenes colocadas
+    tal y como están en el spritesheet
+    */
+    private Image[][] cargaImagenes(String nombreArchivoImagenes, 
+                                        int numFilas,int numColumnas, int ancho, int alto, int escala){
+         try {
+            plantilla = ImageIO.read(getClass().getResource(nombreArchivoImagenes));
+        } catch (IOException ex) {}
+        
+        Image [][] arrayImagenes = new Image[numFilas][numColumnas];
+        
+        
+        //Cargo las imagenes de forma individual en cada imagen del array de imagenes
+        for(int i=0; i<numFilas; i++){
+            for(int j=0; j<numColumnas; j++){
+                arrayImagenes[i][j] = plantilla.getSubimage(j*ancho, 
+                                                            i*alto,
+                                                            ancho,
+                                                            alto);
+                arrayImagenes[i][j] = arrayImagenes[i][j].getScaledInstance(ancho/escala, ancho/escala, Image.SCALE_SMOOTH);
+            }
+        }
+//        for(int j=0; j<4; j++){
+//            //La ultima fila del spritesheet solo mide 32 de alto asi que hay que hacerla aparte
+//            imagenes[20+j] = plantilla.getSubimage(j*64, 5*64, 64, 32);
+//        }
+//        for(int i=0; i<5; i++){
+//            //La ultima columna del spritesheet solo mide 32 de largo asi que hay que hacerla aparte
+//            imagenes[24+i] = plantilla.getSubimage(4*64, i*64, 32, 64);
+//        }
+//        imagenes[24] = plantilla.getSubimage(4*64, 2*64, 32, 64);
+//        imagenes[24] = imagenes[24].getScaledInstance(16, 32, Image.SCALE_SMOOTH);
+//        
+        return arrayImagenes;
+    }
     private void bucleDelJuego() {
         //Gobierna (Se encarga) el redibujado de los objetos en el jPanel1
         //Primero borro todo todo lo que hay en el buffer
