@@ -28,7 +28,7 @@ public class VentanaJuego extends javax.swing.JFrame {
     static int ALTOPANTALLA = 450;
 
     //Numero de marcianos que van a aparecer
-    public int filas = 5;
+    public int filas = 8;
     public int columnas = 10;
 
     BufferedImage buffer = null;
@@ -81,16 +81,38 @@ public class VentanaJuego extends javax.swing.JFrame {
         miNave.y = ALTOPANTALLA - miNave.imagen.getHeight(this) - 40;
         
         //Inicializo el array de marcianos
-        for (int i = 0; i < filas; i++) {
-            for (int j = 0; j < columnas; j++) {
-                listaMarcianos[i][j] = new Marciano();
-                listaMarcianos[i][j].imagen1 = imagenes[0][0];
-                listaMarcianos[i][j].imagen2 = imagenes[0][1];
-                listaMarcianos[i][j].x = j * (15 + listaMarcianos[i][j].imagen1.getWidth(null));
-                listaMarcianos[i][j].y = i * (10 + listaMarcianos[i][j].imagen1.getHeight(null));
-            }
-        }
+        //Reto: Hacerlo usando mods (usando el bucle for anidado)
+        //1º parametro: numero de la fila de marcianos que estoy creando
+        //2º parametro: fila dentro del spritesheet del marciano que quiero pintar
+        //3º parametro: columna dentro del spritesheet del marciano que quiero pintar
+        creaFilaDeMarcianos(0, 0, 0);
+        creaFilaDeMarcianos(1, 0, 0);
+        creaFilaDeMarcianos(2, 1, 2);
+        creaFilaDeMarcianos(3, 1, 2);
+        creaFilaDeMarcianos(4, 2, 2);
+        creaFilaDeMarcianos(5, 2, 2);
+        creaFilaDeMarcianos(6, 3, 2);
+        creaFilaDeMarcianos(7, 3, 2);
+//        for (int i = 0; i < filas; i++) {
+//            for (int j = 0; j < columnas; j++) {
+//                listaMarcianos[i][j] = new Marciano();
+//                listaMarcianos[i][j].imagen1 = imagenes[0][0];
+//                listaMarcianos[i][j].imagen2 = imagenes[0][0];
+//                listaMarcianos[i][j].x = j * (15 + listaMarcianos[i][j].imagen1.getWidth(null));
+//                listaMarcianos[i][j].y = i * (10 + listaMarcianos[i][j].imagen1.getHeight(null));
+//            }
+//        }
 
+    }
+    
+    private void creaFilaDeMarcianos (int numeroFila, int spriteFila, int spriteColumna){
+        for (int j = 0; j < columnas; j++) {
+                listaMarcianos[numeroFila][j] = new Marciano();
+                listaMarcianos[numeroFila][j].imagen1 = imagenes[spriteFila][spriteColumna];
+                listaMarcianos[numeroFila][j].imagen2 = imagenes[spriteFila][spriteColumna + 1];
+                listaMarcianos[numeroFila][j].x = j * (15 + listaMarcianos[numeroFila][j].imagen1.getWidth(null));
+                listaMarcianos[numeroFila][j].y = numeroFila * (10 + listaMarcianos[numeroFila][j].imagen1.getHeight(null));
+        }
     }
     /*
     Este método va a servir para crear el array de imagenes con todas las imagenes
