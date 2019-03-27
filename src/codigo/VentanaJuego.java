@@ -6,6 +6,7 @@
 package codigo;
 
 
+import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -16,6 +17,8 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.Timer;
 
 /**
@@ -45,6 +48,7 @@ public class VentanaJuego extends javax.swing.JFrame {
     //Imagen para cargar el spritesheet con todos los sprites del juego
     BufferedImage plantilla = null;
     Image [][] imagenes;
+    //Lleva un registro de la puntuación del juego
     int puntuacion = 0;
     Timer temporizador = new Timer(10, new ActionListener() {
         @Override
@@ -59,6 +63,7 @@ public class VentanaJuego extends javax.swing.JFrame {
      */
     public VentanaJuego() {
         initComponents();
+        
         //Para cargar el archivo de imagenes:
         //1º, el nombre del archivo
         //2º, filas que tiene el spritesheet
@@ -66,16 +71,17 @@ public class VentanaJuego extends javax.swing.JFrame {
         //4º lo que mide de ancho el sprite en el spritesheet
         //5º lo que mide de alto el sprite en el spritesheet
         //6º para cambiar el tamaño de los sprites
+        
         imagenes = cargaImagenes("/imagenes/invaders2.png", 5, 4, 64, 64, 2);
         
         miDisparo.imagen = imagenes [3][2];
         setSize(ANCHOPANTALLA, ALTOPANTALLA);
         buffer = (BufferedImage) jPanel1.createImage(ANCHOPANTALLA, ALTOPANTALLA);
         buffer.createGraphics();
-        
         temporizador.start();
 
         //Inicializo la posición inicial de la nave
+        
         miNave.imagen = imagenes [4][2];
         miNave.x = ANCHOPANTALLA / 2 - miNave.imagen.getWidth(this) / 2;
         miNave.y = ALTOPANTALLA - miNave.imagen.getHeight(this) - 40;
@@ -104,7 +110,15 @@ public class VentanaJuego extends javax.swing.JFrame {
 //        }
 
     }
-    
+    //Hago un homenaje a Fraxito y su codigo "JavaSonidos" con el siguiente codigo,
+    //Que me va a permitir llamar a los diferentes sonidos que quiera introducir
+    private void reproduce (String sonido){
+        try {
+            Clip clip = AudioSystem.getClip();
+            clip.open(AudioSystem.getAudioInputStream( getClass().getResource(sonido) ));
+            clip.loop(0);} catch (Exception e) {      
+        } 
+   }
     private void creaFilaDeMarcianos (int numeroFila, int spriteFila, int spriteColumna){
         for (int j = 0; j < columnas; j++) {
                 listaMarcianos[numeroFila][j] = new Marciano();
@@ -148,7 +162,7 @@ public class VentanaJuego extends javax.swing.JFrame {
 //        }
 //        imagenes[24] = plantilla.getSubimage(4*64, 2*64, 32, 64);
 //        imagenes[24] = imagenes[24].getScaledInstance(16, 32, Image.SCALE_SMOOTH);
-//        
+      
         return arrayImagenes;
     }
     private void bucleDelJuego() {
@@ -158,6 +172,7 @@ public class VentanaJuego extends javax.swing.JFrame {
         Graphics2D g2 = (Graphics2D) buffer.getGraphics();
         g2.setColor(Color.BLACK);
         g2.fillRect(0, 0, ANCHOPANTALLA, ALTOPANTALLA);
+        
 
         //////////////////////////////////////////////////////////////////////
         //Redibujaremos aquí cada elemento
@@ -174,6 +189,7 @@ public class VentanaJuego extends javax.swing.JFrame {
         //****************** el buffer de golpe sobre el Jpanel***********//
         g2 = (Graphics2D) jPanel1.getGraphics();
         g2.drawImage(buffer, 0, 0, null);
+        
     }
 
     private void chequeaColision() {
@@ -194,7 +210,9 @@ public class VentanaJuego extends javax.swing.JFrame {
                             listaMarcianos[i][j].imagen1.getHeight(null)
                     );
                     if (rectanguloDisparo.intersects(rectanguloMarciano)) {
+                        
                         listaMarcianos[i][j].vivo = false;
+                        reproduce ("/sonidos/invaderkilled.wav");
                         puntuacion +=100;
                         listaMarcianos[i][j].x = ANCHOPANTALLA / 2 - listaMarcianos[i][j].imagen1.getWidth(null) / 2;
                         miDisparo.posicionaDisparo(miNave);
@@ -272,6 +290,7 @@ public class VentanaJuego extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -286,15 +305,32 @@ public class VentanaJuego extends javax.swing.JFrame {
 
         jPanel1.setPreferredSize(new java.awt.Dimension(600, 450));
 
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 600, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(476, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 450, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(331, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(19, 19, 19))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -321,10 +357,11 @@ public class VentanaJuego extends javax.swing.JFrame {
                 miNave.setPulsadoIzquierda(true);
                 break;
             case KeyEvent.VK_RIGHT:
+                reproduce ("/sonidos/shoot.wav");
                 miNave.setPulsadoDerecha(true);
                 break;
             case KeyEvent.VK_SPACE:
-                
+                reproduce ("/sonidos/shoot.wav");
                 miDisparo.posicionaDisparo(miNave);
                 miDisparo.disparado = true;
                 break;
@@ -379,5 +416,6 @@ public class VentanaJuego extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     // End of variables declaration//GEN-END:variables
 }
