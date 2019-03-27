@@ -66,7 +66,9 @@ public class VentanaJuego extends javax.swing.JFrame {
      */
     public VentanaJuego() {
         initComponents();
-        reproduce("/Sonidos/OyS.wav");
+        if(!gameOver){
+            reproduce("/Sonidos/OyS.wav");
+        }    
          try {
          fondoPantalla = ImageIO.read(getClass().getResource("/imagenes/fondo00.png"));
        } catch (IOException ex) {}
@@ -204,6 +206,7 @@ public class VentanaJuego extends javax.swing.JFrame {
             miNave.mueve();
             miDisparo.mueve();
         } else{
+            
             finDePartida(g2);
         }   
         ////////////////////////////////////////////////////////////////////
@@ -248,8 +251,8 @@ public class VentanaJuego extends javax.swing.JFrame {
                         miDisparo.disparado = false;
                     }
                     if (rectanguloNave.intersects(rectanguloMarciano)){
-                 //algún marciano ha tocado con la nave
-                gameOver = true;
+                        //Si choca un marciano con la nave  
+                        gameOver = true;
             }
                 }
             }
