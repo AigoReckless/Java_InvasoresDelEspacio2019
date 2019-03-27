@@ -66,9 +66,9 @@ public class VentanaJuego extends javax.swing.JFrame {
      */
     public VentanaJuego() {
         initComponents();
-        if(!gameOver){
+        
             reproduce("/Sonidos/OyS.wav");
-        }    
+       
          try {
          fondoPantalla = ImageIO.read(getClass().getResource("/imagenes/fondo00.png"));
        } catch (IOException ex) {}
@@ -267,9 +267,9 @@ public class VentanaJuego extends javax.swing.JFrame {
 
     }
     private void finDePartida (Graphics2D gameOver){
-        
+      
         try {
-            Image imagenFin = ImageIO.read((getClass().getResource("/imagenes/gameover.png")));
+            Image imagenFin = ImageIO.read((getClass().getResource("/imagenes/gameover0.png")));
             gameOver.drawImage(imagenFin, 0, 0, null);
         } catch (IOException ex) {
         }
