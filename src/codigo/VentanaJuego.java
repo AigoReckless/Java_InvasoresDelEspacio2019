@@ -34,7 +34,7 @@ public class VentanaJuego extends javax.swing.JFrame {
     public static Label panelPuntuacion = new Label(); 
     int puntuacion = 0;
     //Numero de marcianos que van a aparecer
-    public int filas = 6;
+    public int filas = 4;
     public int columnas = 10;
     int marcianosMuertos = 0;
     BufferedImage buffer = null;
@@ -82,7 +82,7 @@ public class VentanaJuego extends javax.swing.JFrame {
         panelPuntuacion.setFont(fuente);
         panelPuntuacion.setForeground(white);
         panelPuntuacion.setBackground(Color.BLACK);
-        panelPuntuacion.setBounds(490, 390, 100, 30);
+        panelPuntuacion.setBounds(490, 30, 100, 30);
         panelPuntuacion.setText("0");
         jPanel1.add(panelPuntuacion);
         //Para cargar el archivo de imagenes:
@@ -92,7 +92,7 @@ public class VentanaJuego extends javax.swing.JFrame {
         //4º lo que mide de ancho el sprite en el spritesheet
         //5º lo que mide de alto el sprite en el spritesheet
         //6º para cambiar el tamaño de los sprites
-        imagenes = cargaImagenes("/imagenes/invaders2.png", 5, 4, 64, 64, 2);
+        imagenes = cargaImagenes("/imagenes/invaders3.png", 5, 4, 64, 64, 2);
         
         miDisparo.imagen = imagenes[2][4];
         setSize(ANCHOPANTALLA, ALTOPANTALLA);
@@ -112,10 +112,10 @@ public class VentanaJuego extends javax.swing.JFrame {
         //3º parametro: columna dentro del spritesheet del marciano que quiero pintar
         creaFilaDeMarcianos(0, 0, 0);
         creaFilaDeMarcianos(1, 0, 0);
-        creaFilaDeMarcianos(2, 1, 2);
-        creaFilaDeMarcianos(3, 1, 2);
-        creaFilaDeMarcianos(4, 2, 2);
-        creaFilaDeMarcianos(5, 2, 2);
+        creaFilaDeMarcianos(2, 0, 2);
+        creaFilaDeMarcianos(3, 0, 2);
+        //creaFilaDeMarcianos(4, 2, 2);
+        //creaFilaDeMarcianos(5, 2, 2);
         //creaFilaDeMarcianos(6, 3, 2);
         //creaFilaDeMarcianos(7, 3, 2);
 //        for (int i = 0; i < filas; i++) {
@@ -287,10 +287,19 @@ public class VentanaJuego extends javax.swing.JFrame {
     }
     private void finDePartida (Graphics2D gameOver){
         partidaAcabada = true;
+        if(puntuacion == filas*columnas*100){
+            try {
+                Image imagenFin = ImageIO.read((getClass().getResource("/imagenes/youwin.png")));
+                gameOver.drawImage(imagenFin, 0, 0, null);
+            } catch (IOException ex) {
+            }
+        }
+        if(puntuacion != filas*columnas*100){
         try {
             Image imagenFin = ImageIO.read((getClass().getResource("/imagenes/gameover0.png")));
             gameOver.drawImage(imagenFin, 0, 0, null);
         } catch (IOException ex) {
+        }
         }
         
         
@@ -423,31 +432,43 @@ public class VentanaJuego extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
-        switch (evt.getKeyCode()) {
-            case KeyEvent.VK_LEFT:
-                miNave.setPulsadoIzquierda(true);
-                break;
-            case KeyEvent.VK_RIGHT:
-                
-                miNave.setPulsadoDerecha(true);
-                break;
-            case KeyEvent.VK_DOWN:
-                reproduce("/sonidos/shoot.wav", 0);
-                miDisparo.posicionaDisparo(miNave);
-                miDisparo.disparado = true;
-                break;
+        if(partidaAcabada){
+            switch (evt.getKeyCode()){
+                case KeyEvent.VK_ENTER:
+                    partidaAcabada = false;
+            }
         }
+        if(!partidaAcabada){
+            switch (evt.getKeyCode()) {
+                case KeyEvent.VK_LEFT:
+                    miNave.setPulsadoIzquierda(true);
+                    break;
+                case KeyEvent.VK_RIGHT:
+
+                    miNave.setPulsadoDerecha(true);
+                    break;
+                case KeyEvent.VK_DOWN:
+                    reproduce("/sonidos/shoot.wav", 0);
+                    miDisparo.posicionaDisparo(miNave);
+                    miDisparo.disparado = true;
+                    break;
+            }
+        }    
     }//GEN-LAST:event_formKeyPressed
 
     private void formKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyReleased
-        switch (evt.getKeyCode()) {
-            case KeyEvent.VK_LEFT:
-                miNave.setPulsadoIzquierda(false);
-                break;
-            case KeyEvent.VK_RIGHT:
-                miNave.setPulsadoDerecha(false);
-                break;
-        }
+        if(!partidaAcabada){
+            switch (evt.getKeyCode()) {
+
+                    case KeyEvent.VK_LEFT:
+                        miNave.setPulsadoIzquierda(false);
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                        miNave.setPulsadoDerecha(false);
+                        break;
+
+            }
+        }    
     }//GEN-LAST:event_formKeyReleased
 
     /**
