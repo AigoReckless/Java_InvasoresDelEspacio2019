@@ -56,6 +56,7 @@ public class VentanaJuego extends javax.swing.JFrame {
     
     //control del fin de partida
     boolean gameOver = false;
+    boolean partidaAcabada = false;
     Timer temporizador = new Timer(10, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -201,6 +202,7 @@ public class VentanaJuego extends javax.swing.JFrame {
 
     private void bucleDelJuego() {
         Graphics2D g2 = (Graphics2D) buffer.getGraphics();
+        
         if (!gameOver){
             //Gobierna (Se encarga) el redibujado de los objetos en el jPanel1
             //Primero borro todo todo lo que hay en el buffer
@@ -212,13 +214,9 @@ public class VentanaJuego extends javax.swing.JFrame {
             //////////////////////////////////////////////////////////////////////
             //Redibujaremos aquí cada elemento
             //g2.drawImage(miMarciano.imagen1, miMarciano.x, miMarciano.y, null);
-            g2.drawImage(miDisparo.imagen, miDisparo.x, miDisparo.y, null);
-            g2.drawImage(miNave.imagen, miNave.x, miNave.y, null);
-            pintaMarcianos(g2);
-            chequeaColision();
-
-            miNave.mueve();
-            miDisparo.mueve();
+            if(!partidaAcabada){
+                iniciaPartida(g2);
+            }
         } else{
             
             finDePartida(g2);
@@ -230,7 +228,14 @@ public class VentanaJuego extends javax.swing.JFrame {
         g2.drawImage(buffer, 0, 0, null);
 
     }
-
+    private void iniciaPartida (Graphics2D g2){
+            g2.drawImage(miDisparo.imagen, miDisparo.x, miDisparo.y, null);
+            g2.drawImage(miNave.imagen, miNave.x, miNave.y, null);
+            pintaMarcianos(g2);
+            chequeaColision();
+            miNave.mueve();
+            miDisparo.mueve();
+    }
     private void chequeaColision() {
          //Marco para el borde del marciano
         Rectangle2D.Double rectanguloMarciano = new Rectangle2D.Double();
@@ -281,12 +286,13 @@ public class VentanaJuego extends javax.swing.JFrame {
 
     }
     private void finDePartida (Graphics2D gameOver){
-        
+        partidaAcabada = true;
         try {
             Image imagenFin = ImageIO.read((getClass().getResource("/imagenes/gameover0.png")));
             gameOver.drawImage(imagenFin, 0, 0, null);
         } catch (IOException ex) {
         }
+        
         
         
 }
