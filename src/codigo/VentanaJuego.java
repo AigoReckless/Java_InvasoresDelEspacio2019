@@ -6,7 +6,6 @@
 package codigo;
 
 import java.awt.Color;
-import static java.awt.Color.green;
 import static java.awt.Color.white;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -72,7 +71,7 @@ public class VentanaJuego extends javax.swing.JFrame {
         initComponents();
 
         reproduce("/Sonidos/OyS.wav", 5);
-
+        
         try {
             fondoPantalla = ImageIO.read(getClass().getResource("/imagenes/fondo00.png"));
         } catch (IOException ex) {
@@ -83,6 +82,7 @@ public class VentanaJuego extends javax.swing.JFrame {
         panelPuntuacion.setFont(fuente);
         panelPuntuacion.setForeground(white);
         panelPuntuacion.setBackground(Color.BLACK);
+        //Posiciono el panel en el eje X, eje Y y le asigno un ancho y un alto
         panelPuntuacion.setBounds(490, 30, 100, 30);
         panelPuntuacion.setText("0");
         jPanel1.add(panelPuntuacion);
@@ -208,7 +208,7 @@ public class VentanaJuego extends javax.swing.JFrame {
             //Gobierna (Se encarga) el redibujado de los objetos en el jPanel1
             //Primero borro todo todo lo que hay en el buffer
             contador++;
-
+            
             g2.setColor(Color.BLACK);
             g2.fillRect(0, 0, ANCHOPANTALLA, ALTOPANTALLA);
             g2.drawImage(fondoPantalla, 0, 0, null);
@@ -231,6 +231,7 @@ public class VentanaJuego extends javax.swing.JFrame {
     }
 
     private void iniciaPartida(Graphics2D g2) {
+        
         g2.drawImage(miDisparo.imagen, miDisparo.x, miDisparo.y, null);
         g2.drawImage(miNave.imagen, miNave.x, miNave.y, null);
         pintaMarcianos(g2);
@@ -275,9 +276,12 @@ public class VentanaJuego extends javax.swing.JFrame {
 
                     }
                     if (rectanguloNave.intersects(rectanguloMarciano)) {
-                        //Si choca un marciano con la nave  
+                        //Si choca un marciano con la nave
+                        
+                        reproduce("/Sonidos/gameover.wav", 0);
                         gameOver = true;
                     }
+                    
                 }
             }
         }
@@ -299,6 +303,7 @@ public class VentanaJuego extends javax.swing.JFrame {
                 gameOver.drawImage(imagenFin, 0, 0, null);
             } catch (IOException ex) {
             }
+            
         }
 
     }
@@ -307,7 +312,7 @@ public class VentanaJuego extends javax.swing.JFrame {
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
                 listaMarcianos[i][j].setvX(listaMarcianos[i][j].getvX() * -1);
-
+                
             }
         }
 
@@ -354,7 +359,7 @@ public class VentanaJuego extends javax.swing.JFrame {
                     }
                 }
                 if (puntuacion == filas * columnas * 100) { //Si alcanzo la puntuación significa que he completado el nivel y por lo tanto se acaba la partida
-                        //Si choca un marciano con la nave  
+                        
                         gameOver = true;
                     }
             }
@@ -448,6 +453,7 @@ public class VentanaJuego extends javax.swing.JFrame {
         }
         if (!partidaAcabada) {
             switch (evt.getKeyCode()) {
+                
                 case KeyEvent.VK_LEFT:
                     miNave.setPulsadoIzquierda(true);
                     break;
@@ -475,6 +481,7 @@ public class VentanaJuego extends javax.swing.JFrame {
 
                 case KeyEvent.VK_LEFT:
                     miNave.setPulsadoIzquierda(false);
+                    
                     break;
                 case KeyEvent.VK_RIGHT:
                     miNave.setPulsadoDerecha(false);
